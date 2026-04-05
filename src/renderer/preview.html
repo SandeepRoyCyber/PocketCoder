@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>Mother's Health Keeper</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,sans-serif; }
+    body { background:#F9FAFB; min-height:100vh; }
+    .header { background:#F59E0B; color:white; padding:16px; 
+              display:flex; align-items:center; gap:12px; 
+              position:sticky; top:0; z-index:100; }
+    .tabs { display:flex; padding:12px; background:white; 
+            border-bottom:1px solid #E5E7EB; position:sticky; top:56px; z-index:99; }
+    .entry-card { background:white; border-radius:8px; padding:12px; 
+                  margin-bottom:8px; border-left:3px solid #F59E0B;
+                  box-shadow:0 1px 2px rgba(0,0,0,0.05); }
+    .entry-field { font-size:13px; color:#6B7280; margin-bottom:2px; }
+    .entry-value { font-size:15px; color:#111827; font-weight:500; }
+    .delete-btn { float:right; background:none; border:none; 
+                  color:#EF4444; cursor:pointer; font-size:18px; }
+    .empty-state { text-align:center; padding:40px 20px; color:#9CA3AF; }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <span style="font-size:28px">👩‍⚕️</span>
+  <div>
+    <div style="font-size:18px;font-weight:700">Mother's Health Keeper</div>
+    <div style="font-size:12px;opacity:0.8">Track medication schedules and doctor appointments for your mother</div>
+  </div>
+</div>
+
+<div class="tabs">
+    <button onclick="showScreen('medication_schedule')" id="tab_medication_schedule"
+      style="flex:1;padding:10px;border:none;background:#F59E0B;
+             color:white;font-size:14px;font-weight:600;cursor:pointer;
+             border-radius:8px;margin:0 4px;transition:all 0.2s">
+      Medication Tracker
+    </button>
+  
+    <button onclick="showScreen('doctor_appointments')" id="tab_doctor_appointments"
+      style="flex:1;padding:10px;border:none;background:#F3F4F6;
+             color:#6B7280;font-size:14px;font-weight:600;cursor:pointer;
+             border-radius:8px;margin:0 4px;transition:all 0.2s">
+      Doctor Visits
+    </button>
+  </div>
+
+
+      <div id="screen_medication_schedule" 
+        style="display:block;padding:16px">
+        
+        <div style="background:white;border-radius:12px;padding:16px;margin-bottom:16px;
+                    box-shadow:0 1px 3px rgba(0,0,0,0.1)">
+          <h3 style="margin:0 0 16px 0;color:#111827;font-size:16px;font-weight:600">
+            Current Medications
+          </h3>
+          <form onsubmit="handleSubmit(event, 'medication_schedule')">
+            
+          <div style="margin-bottom:16px">
+            <label style="display:block;font-size:13px;color:#6B7280;margin-bottom:4px">Medication Name *</label>
+            <input type="text" name="medication_name"
+              placeholder="Enter Medication Name"
+              style="width:100%;padding:10px 12px;border:1px solid #E5E7EB;border-radius:8px;font-size:15px;box-sizing:border-box">
+          </div>
+          <div style="margin-bottom:16px">
+            <label style="display:block;font-size:13px;color:#6B7280;margin-bottom:4px">Dosage (mg/units) *</label>
+            <input type="text" name="dosage"
+              placeholder="Enter Dosage (mg/units)"
+              style="width:100%;padding:10px 12px;border:1px solid #E5E7EB;border-radius:8px;font-size:15px;box-sizing:border-box">
+          </div>
+          <div style="margin-bottom:16px">
+            <label style="display:block;font-size:13px;color:#6B7280;margin-bottom:4px">Frequency *</label>
+            <select name="frequency" 
+              style="width:100%;padding:10px 12px;border:1px solid #E5E7EB;border-radius:8px;font-size:15px;background:white">
+              <option value="">Select Frequency</option>
+              <option value="Every 6 Hours">Every 6 Hours</option><option value="Daily">Daily</option><option value="As Needed">As Needed</option>
+            </select>
+          </div>
+          <div style="margin-bottom:16px">
+            <label style="display:block;font-size:13px;color:#6B7280;margin-bottom:4px">Last Taken</label>
+            <input type="date" name="last_taken"
+              style="width:100%;padding:10px 12px;border:1px solid #E5E7EB;border-radius:8px;font-size:15px;box-sizing:border-box">
+          </div>
+          <div style="margin-bottom:16px">
+            <label style="display:block;font-size:13px;color:#6B7280;margin-bottom:4px">Status</label>
+            <input type="text" name="status"
+              placeholder="Enter Status"
+              style="width:100%;padding:10px 12px;border:1px solid #E5E7EB;border-radius:8px;font-size:15px;box-sizing:border-box">
+          </div>
+            <button type="submit"
+              style="width:100%;padding:12px;background:#F59E0B;color:white;
+                     border:none;border-radius:8px;font-size:16px;font-weight:600;
+                     cursor:pointer;margin-top:8px">
+              Save Entry
+            </button>
+          </form>
+          <div id="entries_medication_schedule" style="margin-top:20px"></div>
+        </div>
+        <div style="background:white;border-radius:12px;padding:16px;margin-bottom:16px;
+                    box-shadow:0 1px 3px rgba(0,0,0,0.1)">
+          <h3 style="margin:0 0 16px 0;color:#111827;font-size:16px;font-weight:600">
+            Log Intake
+          </h3>
+          <form onsubmit="handleSubmit(event, 'medication_schedule')">
+            
+          <div style="margin-bottom:16px">
+            <label style="display:block;font-size:13px;color:#6B7280;margin-bottom:4px">Select Medication *</label>
+            <select name="selected_medication" 
+              style="width:100%;padding:10px 12px;border:1px solid #E5E7EB;border-radius:8px;font-size:15px;background:white">
+              <option value="">Select Select Medication</option>
+              <option value="Medication 1">Medication 1</option><option value="Medication 2">Medication 2</option><option value="Medication 3">Medication 3</option>
+            </select>
+          </div>
+          <div style="margin-bottom:16px">
+            <label style="display:block;font-size:13px;color:#6B7280;margin-bottom:4px">Time Taken *</label>
+            <input type="date" name="time_taken"
+              style="width:100%;padding:10px 12px;border:1px solid #E5E7EB;border-radius:8px;font-size:15px;box-sizing:border-box">
+          </div>
+            <button type="submit"
+              style="width:100%;padding:12px;background:#F59E0B;color:white;
+                     border:none;border-radius:8px;font-size:16px;font-weight:600;
+                     cursor:pointer;margin-top:8px">
+              Save Entry
+            </button>
+          </form>
+          <div id="entries_medication_schedule" style="margin-top:20px"></div>
+        </div>
+      </div>
+      <div id="screen_doctor_appointments" 
+        style="display:none;padding:16px">
+        
+        <div style="background:white;border-radius:12px;padding:16px;margin-bottom:16px;
+                    box-shadow:0 1px 3px rgba(0,0,0,0.1)">
+          <h3 style="margin:0 0 16px 0;color:#111827;font-size:16px;font-weight:600">
+            Upcoming Appointments
+          </h3>
+          <form onsubmit="handleSubmit(event, 'doctor_appointments')">
+            
+          <div style="margin-bottom:16px">
+            <label style="display:block;font-size:13px;color:#6B7280;margin-bottom:4px">Doctor Name *</label>
+            <input type="text" name="doctor_name"
+              placeholder="Enter Doctor Name"
+              style="width:100%;padding:10px 12px;border:1px solid #E5E7EB;border-radius:8px;font-size:15px;box-sizing:border-box">
+          </div>
+          <div style="margin-bottom:16px">
+            <label style="display:block;font-size:13px;color:#6B7280;margin-bottom:4px">Visit Date *</label>
+            <input type="date" name="visit_date"
+              style="width:100%;padding:10px 12px;border:1px solid #E5E7EB;border-radius:8px;font-size:15px;box-sizing:border-box">
+          </div>
+          <div style="margin-bottom:16px">
+            <label style="display:block;font-size:13px;color:#6B7280;margin-bottom:4px">Notes</label>
+            <input type="text" name="notes"
+              placeholder="Enter Notes"
+              style="width:100%;padding:10px 12px;border:1px solid #E5E7EB;border-radius:8px;font-size:15px;box-sizing:border-box">
+          </div>
+            <button type="submit"
+              style="width:100%;padding:12px;background:#F59E0B;color:white;
+                     border:none;border-radius:8px;font-size:16px;font-weight:600;
+                     cursor:pointer;margin-top:8px">
+              Save Entry
+            </button>
+          </form>
+          <div id="entries_doctor_appointments" style="margin-top:20px"></div>
+        </div>
+        <div style="background:white;border-radius:12px;padding:16px;margin-bottom:16px;
+                    box-shadow:0 1px 3px rgba(0,0,0,0.1)">
+          <h3 style="margin:0 0 16px 0;color:#111827;font-size:16px;font-weight:600">
+            Schedule New Visit
+          </h3>
+          <form onsubmit="handleSubmit(event, 'doctor_appointments')">
+            
+          <div style="margin-bottom:16px">
+            <label style="display:block;font-size:13px;color:#6B7280;margin-bottom:4px">Doctor Name *</label>
+            <input type="text" name="doctor"
+              placeholder="Enter Doctor Name"
+              style="width:100%;padding:10px 12px;border:1px solid #E5E7EB;border-radius:8px;font-size:15px;box-sizing:border-box">
+          </div>
+          <div style="margin-bottom:16px">
+            <label style="display:block;font-size:13px;color:#6B7280;margin-bottom:4px">Visit Month *</label>
+            <input type="date" name="visit_month"
+              style="width:100%;padding:10px 12px;border:1px solid #E5E7EB;border-radius:8px;font-size:15px;box-sizing:border-box">
+          </div>
+          <div style="margin-bottom:16px">
+            <label style="display:block;font-size:13px;color:#6B7280;margin-bottom:4px">Notes for Visit</label>
+            <input type="text" name="notes"
+              placeholder="Enter Notes for Visit"
+              style="width:100%;padding:10px 12px;border:1px solid #E5E7EB;border-radius:8px;font-size:15px;box-sizing:border-box">
+          </div>
+            <button type="submit"
+              style="width:100%;padding:12px;background:#F59E0B;color:white;
+                     border:none;border-radius:8px;font-size:16px;font-weight:600;
+                     cursor:pointer;margin-top:8px">
+              Save Entry
+            </button>
+          </form>
+          <div id="entries_doctor_appointments" style="margin-top:20px"></div>
+        </div>
+      </div>
+
+<script>
+  // Storage
+  const STORAGE_KEY = 'medicine_tracker_data';
+  let appData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+
+  function saveData() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+  }
+
+  // Screen navigation
+  function showScreen(screenName) {
+    document.querySelectorAll('[id^="screen_"]').forEach(s => s.style.display = 'none');
+    document.getElementById('screen_' + screenName).style.display = 'block';
+    
+    document.querySelectorAll('[id^="tab_"]').forEach(t => {
+      t.style.background = '#F3F4F6';
+      t.style.color = '#6B7280';
+    });
+    const activeTab = document.getElementById('tab_' + screenName);
+    if (activeTab) {
+      activeTab.style.background = '#F59E0B';
+      activeTab.style.color = 'white';
+    }
+  }
+
+  // Form submission
+  function handleSubmit(event, screenName) {
+    event.preventDefault();
+    const form = event.target;
+    const formData = new FormData(form);
+    const entry = {};
+    
+    formData.forEach((value, key) => { entry[key] = value; });
+    entry._id = Date.now();
+    entry._timestamp = new Date().toLocaleString();
+
+    if (!appData[screenName]) appData[screenName] = [];
+    appData[screenName].push(entry);
+    saveData();
+    
+    renderEntries(screenName);
+    form.reset();
+    
+    // Show success
+    const btn = form.querySelector('button[type="submit"]');
+    btn.textContent = '✓ Saved!';
+    btn.style.background = '#10B981';
+    setTimeout(() => {
+      btn.textContent = 'Save Entry';
+      btn.style.background = '#F59E0B';
+    }, 1500);
+  }
+
+  // Render saved entries
+  function renderEntries(screenName) {
+    const container = document.getElementById('entries_' + screenName);
+    if (!container) return;
+    
+    const entries = appData[screenName] || [];
+    
+    if (entries.length === 0) {
+      container.innerHTML = '<div class="empty-state">📭 No entries yet.<br>Add your first one above.</div>';
+      return;
+    }
+
+    container.innerHTML = entries.map((entry, i) => {
+      const fields = Object.entries(entry)
+        .filter(([k]) => !k.startsWith('_'))
+        .map(([k, v]) => {
+          const label = k.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+          return '<div class="entry-field">' + label + '</div><div class="entry-value">' + v + '</div>';
+        }).join('');
+      
+      return '<div class="entry-card">' +
+        '<button class="delete-btn" onclick="deleteEntry(' + "'" + screenName + "'" + ',' + i + ')">×</button>' +
+        fields +
+        '<div style="font-size:11px;color:#9CA3AF;margin-top:8px">' + entry._timestamp + '</div>' +
+        '</div>';
+    }).join('');
+  }
+
+  // Delete entry
+  function deleteEntry(screenName, index) {
+    appData[screenName].splice(index, 1);
+    saveData();
+    renderEntries(screenName);
+  }
+
+  // Search handler
+  function handleSearch(query) {
+    const cards = document.querySelectorAll('.entry-card');
+    cards.forEach(card => {
+      const text = card.textContent.toLowerCase();
+      card.style.display = text.includes(query.toLowerCase()) ? 'block' : 'none';
+    });
+  }
+
+  // Load existing data on start
+  Object.keys(appData).forEach(screenName => renderEntries(screenName));
+</script>
+
+</body>
+</html>

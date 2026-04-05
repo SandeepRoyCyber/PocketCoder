@@ -1,0 +1,43 @@
+{
+  "app_type": "string",
+  "app_name": "string",
+  "description": "string",
+  "screens": [
+    {
+      "name": "string",
+      "title": "string",
+      "components": [
+        {
+          "type": "list|form|summary|search|detail",
+          "title": "string",
+          "fields": [
+            {
+              "name": "string",
+              "label": "string",
+              "type": "text|number|date|boolean|phone|select",
+              "required": true,
+              "options": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "alerts": [
+    {
+      "trigger": "string",
+      "message": "string",
+      "timing": "string"
+    }
+  ],
+  "rules": [
+    {
+      "condition": "string",
+      "action": "string"
+    }
+  ],
+  "theme": {
+    "primary_color": "string",
+    "icon": "string"
+  }
+}
