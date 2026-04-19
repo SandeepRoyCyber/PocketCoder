@@ -20,12 +20,16 @@ export default function HomeScreen({ navigation }) {
     isGenerating,
     generationProgress,
     error,
+    inferenceProvider,
+    modelName,
+    ollamaBaseUrl,
     setPrompt: storeSetPrompt,
     setGenerating,
     addProgress,
     setError,
     addApp,
-    apps
+    apps,
+    setInferenceProvider
   } = useAppStore();
 
   async function handleCreate() {
@@ -41,7 +45,11 @@ export default function HomeScreen({ navigation }) {
       // Step 1 — Generate JSON schema
       addProgress('Understanding your idea...');
       const { generateApp } = require('../engine/inference');
-      const result = await generateApp(prompt);
+      const result = await generateApp(prompt, {
+        provider: inferenceProvider,
+        modelName,
+        ollamaBaseUrl
+      });
 
       if (result.error) {
         setError(result.error);
@@ -85,6 +93,45 @@ export default function HomeScreen({ navigation }) {
 
         {/* Prompt Input */}
         <View style={styles.inputCard}>
+          <Text style={styles.modeLabel}>AI Runtime</Text>
+          <View style={styles.modeRow}>
+            <TouchableOpacity
+              style={[
+                styles.modeChip,
+                inferenceProvider === 'on_device' && styles.modeChipActive
+              ]}
+              onPress={() => setInferenceProvider('on_device')}
+              disabled={isGenerating}
+            >
+              <Text
+                style={[
+                  styles.modeChipText,
+                  inferenceProvider === 'on_device' && styles.modeChipTextActive
+                ]}
+              >
+                📱 On-device iPhone
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.modeChip,
+                inferenceProvider === 'ollama' && styles.modeChipActive
+              ]}
+              onPress={() => setInferenceProvider('ollama')}
+              disabled={isGenerating}
+            >
+              <Text
+                style={[
+                  styles.modeChipText,
+                  inferenceProvider === 'ollama' && styles.modeChipTextActive
+                ]}
+              >
+                🖥 Ollama
+              </Text>
+            </TouchableOpacity>
+          </View>
+
           <Text style={styles.inputLabel}>What do you want to build?</Text>
           <TextInput
             style={styles.textInput}
@@ -196,6 +243,27 @@ const styles = StyleSheet.create({
     shadowColor: '#000', shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.06, shadowRadius: 8, elevation: 3, marginBottom: 16
   },
+  modeLabel: { fontSize: 13, color: '#6B7280', marginBottom: 8, fontWeight: '600' },
+  modeRow: { flexDirection: 'row', gap: 8, marginBottom: 14 },
+  modeChip: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 8
+  },
+  modeChipActive: {
+    borderColor: '#6366F1',
+    backgroundColor: '#EEF2FF'
+  },
+  modeChipText: {
+    fontSize: 12,
+    color: '#6B7280',
+    textAlign: 'center',
+    fontWeight: '600'
+  },
+  modeChipTextActive: { color: '#4F46E5' },
   inputLabel: { fontSize: 16, fontWeight: '600', color: '#111827', marginBottom: 12 },
   textInput: {
     borderWidth: 1, borderColor: '#E5E7EB', borderRadius: 12,

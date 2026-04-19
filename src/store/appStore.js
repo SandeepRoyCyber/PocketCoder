@@ -10,8 +10,17 @@ const useAppStore = create((set, get) => ({
   currentPrompt: '',
   error: null,
 
+  // Inference config
+  inferenceProvider: 'on_device',
+  modelName: 'gemma4:e2b',
+  ollamaBaseUrl: 'http://localhost:11434',
+
   // Actions
   setPrompt: (prompt) => set({ currentPrompt: prompt }),
+
+  setInferenceProvider: (provider) => set({ inferenceProvider: provider }),
+  setModelName: (modelName) => set({ modelName }),
+  setOllamaBaseUrl: (ollamaBaseUrl) => set({ ollamaBaseUrl }),
   
   setGenerating: (status) => set({ 
     isGenerating: status,
