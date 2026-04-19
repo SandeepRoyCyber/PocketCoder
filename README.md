@@ -7,6 +7,10 @@ Turn any idea into a working personal app — instantly, offline, on your phone.
 ## Vision
 Prompt → Local AI (Gemma 4 E2B) → JSON → WebView → Working App
 
+Inference providers:
+- 📱 On-device iPhone runtime (via native `PocketCoderLLM` bridge)
+- 🖥️ Ollama HTTP (`/api/generate`) for local development
+
 ## Status
 - [x] Core inference engine (Gemma 4 E2B via Ollama)
 - [x] Universal JSON schema
